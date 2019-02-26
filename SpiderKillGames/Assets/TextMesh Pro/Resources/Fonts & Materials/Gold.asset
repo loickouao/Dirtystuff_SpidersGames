@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2108210716, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
+  m_Name: Gold
+  m_EditorClassIdentifier: 
+  topLeft: {r: 0.9632353, g: 0.72281724, b: 0.20539579, a: 1}
+  topRight: {r: 0.9632353, g: 0.7922757, b: 0.077908754, a: 1}
+  bottomLeft: {r: 0.85294116, g: 0.54437715, b: 0.081531115, a: 1}
+  bottomRight: {r: 0.83823526, g: 0.5820464, b: 0.08012541, a: 1}

@@ -1,39 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ControlSpider : MonoBehaviour {
 
 	private GameObject playerG;
-	private float playerDistance;
-	public float rotationDamping;
-	public float moveSpeed;
+	private GameObject manager;
+	private float rotationDamping = 3;
+	private float moveSpeed = 2f;
 	private Animation anim;
-	int nb = 0;
-	public static bool isPlayerAlive = true;
+	private float health = 20f;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		anim = transform.GetComponent<Animation> ();
-		playerG = GameObject.Find("FirstPersonCharacter");
+		playerG = GameObject.FindGameObjectWithTag ("MainCamera");
+		manager = GameObject.FindGameObjectWithTag ("Player");
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (isPlayerAlive) {
-			playerDistance = Vector3.Distance(playerG.transform.position, transform.position);
-			if (playerDistance < 20f) {
-
-				lookAtPlayer();
+		if (playerG == null)
+			return;
+		float playerDistance = Vector3.Distance(playerG.transform.position, transform.position);
+		if (playerDistance < 100f) {
+			lookAtPlayer();
+		}
+		if (playerDistance < 99f) {
+			if (playerDistance > 1.5f) {
+				chase ();
+			} else {
+				attack();
 			}
-			if (playerDistance < 15f) {
-				if (playerDistance > 2.8f) {
-					chase ();
-				} else {
-					attack();
-				}
-			}
-		}	
+		}
 	}
 
 	void lookAtPlayer(){
@@ -45,19 +42,36 @@ public class ControlSpider : MonoBehaviour {
 		anim.Play ();
 		transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 	}
-	void attack(){
-		anim.clip = anim.GetClip ("Attack");
-		anim.Play ();
-		RaycastHit hit;
-		if (Physics.Raycast (transform.position, transform.forward, out hit)) {
-			if (hit.collider.gameObject.tag == "Player") {
-				nb = nb + 1;
-				if (nb == 15) {
-					hit.collider.gameObject.GetComponent<health_script> ().health -= 2f;
-					print(hit.collider.gameObject.GetComponent<health_script> ().health);
-					nb=0;
-				}
-			}
+	void attack() {
+		health -= 20f;
+		PlayerController control = manager.GetComponent<PlayerController>();
+		if (control != null) {
+			control.TakeDamage(10f);
 		}
-	} 	
+		if (health <= 0f) {
+			Die();
+		}
+	}
+	public void TakeDamage(float amount) {
+		health -= amount;
+		PlayerController control = manager.GetComponent<PlayerController>();
+		if (control != null) {
+			control.AddScore (5);
+		}
+		if (health <= 0f) {
+			Die();
+		}
+	}
+	void Die() {
+		Destroy(gameObject);
+	}
+
+	public void UpdateSpeed(float newValue) {
+		moveSpeed = newValue;
+	}
+
+	public float getSpeed() {
+		return moveSpeed;
+	}
+
 }
